@@ -113,6 +113,11 @@
             <button onclick="go(1000000)">1.000.000 Punkte</button>
         </div>
 
+        <div>
+            <button onclick="go()">Ausführen</button>
+            <input type='number' placeholder="Schreibe eine Zahl">
+        </div>
+
         <p id="out">Ergebnis: -</p>
     </div>
 
@@ -124,6 +129,8 @@
             
             // Canvas leeren vor neuem Durchlauf
             ctx.clearRect(0, 0, 300, 300);
+                const specialNumber = document.getQuerySelector("input").value;
+            if(specialNumber) {n = specialNumber};
 
             for (let i = 0; i < n; i++) {
                 let x = Math.random();
