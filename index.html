@@ -58,7 +58,8 @@
         /* Button Container */
         .controls {
             display: flex;
-            gap: 10px;
+            flex-wrap: wrap; /* Ermöglicht Umbruch auf mehreren Zeilen */
+            gap: 8px;
             justify-content: center;
             margin-top: 1.5rem;
         }
@@ -87,6 +88,30 @@
             transform: translateY(0);
         }
 
+        /* Styling für das Eingabefeld */
+        .input-group {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 0.5rem; /* Abstand zu den Buttons */
+        }
+
+        input[type="number"] {
+            background-color: var(--bg-color);
+            border: 1px solid #475569;
+            color: var(--text-color);
+            padding: 10px;
+            border-radius: 8px;
+            width: 150px;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
         /* Ergebnisanzeige */
         #out {
             margin-top: 1.5rem;
@@ -107,52 +132,75 @@
         <canvas id="c" width="300" height="300"></canvas>
         
         <div class="controls">
-            <button onclick="go(1000)">1.000 Punkte</button>
-            <button onclick="go(10000)">10.000 Punkte</button>
-            <button onclick="go(100000)">100.000 Punkte</button>
-            <button onclick="go(1000000)">1.000.000 Punkte</button>
-        </div>
-
-        <div>
-            <button onclick="go()">Ausführen</button>
-            <input type='number' placeholder="Schreibe eine Zahl">
+            <!-- Neuer Bereich für die freie Eingabe -->
+            <div class="input-group" style="width: 100%; justify-content: center;">
+                <input type="number" id="pointCount" placeholder="Anzahl n" value="1000" min="1">
+                <button onclick="startCalculation()">Berechnen</button>
+            </div>
+            
+            <!-- Preset Buttons -->
+            <button onclick="go(1000)">1.000</button>
+            <button onclick="go(10000)">10.000</button>
+            <button onclick="go(100000)">100.000</button>
+            <button onclick="go(1000000)">1.000.000</button>
         </div>
 
         <p id="out">Ergebnis: -</p>
     </div>
 
     <script>
-        // Exakt deine Logik, nur syntaktisch bereinigt (Anführungszeichen, Leerzeichen)
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        const output = document.getElementById('out');
+        const inputField = document.getElementById('pointCount');
+
+        // Funktion zum Starten der Berechnung aus dem Eingabefeld
+        function startCalculation() {
+            let n = parseInt(inputField.value);
+            if (isNaN(n) || n <= 0) {
+                alert("Bitte gib eine gültige positive Zahl ein.");
+                return;
+            }
+            go(n);
+        }
+
+        // Die eigentliche Simulationslogik
         function go(n) {
-            const ctx = document.getElementById('c').getContext('2d');
             let hits = 0;
+            // Breite und Höhe dynamisch aus dem Canvas holen
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // UI Feedback
+            output.innerText = `Berechne ${n.toLocaleString('de-DE')} Punkte...`;
             
-            // Canvas leeren vor neuem Durchlauf
-            ctx.clearRect(0, 0, 300, 300);
-                const specialNumber = document.getQuerySelector("input").value;
-            if(specialNumber) {n = specialNumber};
+            // Canvas leeren
+            ctx.clearRect(0, 0, w, h);
 
-            for (let i = 0; i < n; i++) {
-                let x = Math.random();
-                let y = Math.random();
+            // "setTimeout" sorgt dafür, dass der Text "Berechne..." kurz gerendert wird, 
+            // bevor der Browser durch die schwere Schleife blockiert wird.
+            setTimeout(() => {
+                for (let i = 0; i < n; i++) {
+                    let x = Math.random();
+                    let y = Math.random();
 
-                // Die mathematische Prüfung (Einheitskreis)
-                if (x * x + y * y <= 1) {
-                    hits++;
-                    ctx.fillStyle = "#4ade80"; // Helles Grün für besseren Kontrast
-                } else {
-                    ctx.fillStyle = "#f87171"; // Weiches Rot für besseren Kontrast
+                    if (x * x + y * y <= 1) {
+                        hits++;
+                        ctx.fillStyle = "#4ade80"; // Grün
+                    } else {
+                        ctx.fillStyle = "#f87171"; // Rot
+                    }
+
+                    // Zeichnen (Skalierung auf Canvas-Größe)
+                    ctx.fillRect(x * w, (1 - y) * h, 2, 2);
                 }
 
-                // Zeichnen des Punktes (Logik: x*300, (1-y)*300)
-                ctx.fillRect(x * 300, (1 - y) * 300, 2, 2);
-            }
-
-            // Pi Berechnung
-            let pi = 4 * hits / n;
-            
-            // Ergebnis Ausgabe
-            document.getElementById('out').innerText = "Pi ≈ " + pi;
+                // Pi Berechnung
+                let pi = 4 * hits / n;
+                
+                // Ergebnis Ausgabe
+                output.innerText = "Pi ≈ " + pi;
+            }, 50); // 50ms Verzögerung für UI-Update
         }
     </script>
 </body>
