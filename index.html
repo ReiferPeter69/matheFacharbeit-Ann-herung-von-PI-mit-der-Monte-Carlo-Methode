@@ -128,9 +128,16 @@
         </div>
 
         <p id="out">Ergebnis: -</p>
+
+        <div class="controls">
+            <input type="number" id="repetitions" value="2" min="1">
+            <button onclick="reapeat()">Schleife Starten</button>
+        </div>
     </div>
 
     <script>
+
+        let currentPI = 0;
         // Deine ursprüngliche Logik, leicht angepasst für die Übergabe
         function go(n) {
             const ctx = document.getElementById('c').getContext('2d');
@@ -157,9 +164,10 @@
 
             // Pi Berechnung
             let pi = 4 * hits / n;
-            
+            currentPI += pi;
             // Ergebnis Ausgabe
             document.getElementById('out').innerText = "Pi ≈ " + pi;
+            
         }
 
         // Neue Hilfsfunktion: Liest n aus dem Input und ruft go() auf
@@ -170,6 +178,14 @@
             } else {
                 alert("Bitte eine Zahl größer als 0 eingeben.");
             }
+        }
+
+        function repeatSimulation() {
+            let r = document.getElementById('repetitions').value;
+            let median = 0;
+            median = currentPI / r;
+            
+            runSimulation();
         }
     </script>
 </body>
