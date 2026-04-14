@@ -184,10 +184,10 @@
             let currentRun = 0;
             let r = document.getElementById('repetions').value;
             
-            while(r >= currentRun) {
-                runSimulation();
-                currentRun++;
-            }
+              while(currentRun < r) {
+        runSimulation();
+        currentRun++;
+    }
             let median = 0;
             median = currentPI / r;
             document.getElementById('out2').innerText = "Das Medium ist ≈ " + median;
