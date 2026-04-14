@@ -139,36 +139,39 @@
 
         let currentPI = 0;
         // Deine ursprüngliche Logik, leicht angepasst für die Übergabe
-        function go(n) {
-            const ctx = document.getElementById('c').getContext('2d');
-            let hits = 0;
-            
-            // Canvas leeren vor neuem Durchlauf
-            ctx.clearRect(0, 0, 300, 300);
+       function go(n, skipDraw = false) {
+    const ctx = document.getElementById('c').getContext('2d');
+    let hits = 0;
+    
+    // Nur leeren wenn gezeichnet wird
+    if (!skipDraw) {
+        ctx.clearRect(0, 0, 300, 300);
+    }
 
-            for (let i = 0; i < n; i++) {
-                let x = Math.random();
-                let y = Math.random();
+    for (let i = 0; i < n; i++) {
+        let x = Math.random();
+        let y = Math.random();
 
-                // Die mathematische Prüfung (Einheitskreis)
-                if (x * x + y * y <= 1) {
-                    hits++;
-                    ctx.fillStyle = "#4ade80"; // Helles Grün
-                } else {
-                    ctx.fillStyle = "#f87171"; // Weiches Rot
-                }
-
-                // Zeichnen des Punktes
+        if (x * x + y * y <= 1) {
+            hits++;
+            // Nur zeichnen wenn nicht im Skip-Modus
+            if (!skipDraw) {
+                ctx.fillStyle = "#4ade80";
                 ctx.fillRect(x * 300, (1 - y) * 300, 2, 2);
             }
-
-            // Pi Berechnung
-            let pi = 4 * hits / n;
-            currentPI += pi;
-            // Ergebnis Ausgabe
-            document.getElementById('out').innerText = "Pi ≈ " + pi;
-            
+        } else {
+            if (!skipDraw) {
+                ctx.fillStyle = "#f87171";
+                ctx.fillRect(x * 300, (1 - y) * 300, 2, 2);
+            }
         }
+    }
+
+    let pi = 4 * hits / n;
+    currentPI += pi;
+    document.getElementById('out').innerText = "Pi ≈ " + pi;
+}
+
 
         // Neue Hilfsfunktion: Liest n aus dem Input und ruft go() auf
         function runSimulation() {
@@ -180,14 +183,21 @@
             }
         }
 
-        function reapeat() {
-            let currentRun = 0;
-            let r = document.getElementById('repetions').value;
-            
-              while(currentRun < r) {
-        runSimulation();
+function reapeat() {
+    let currentRun = 0;
+    let r = parseInt(document.getElementById('repetions').value);
+    currentPI = 0;
+    
+    while(currentRun < r) {
+ 
+        go(parseInt(document.getElementById('pointsInput').value), true);
         currentRun++;
     }
+    
+    let median = currentPI / r;
+    document.getElementById('out2').innerText = "Der Mittelwert ist ≈ " + median.toFixed(5);
+    currentPI = 0;
+}
             let median = 0;
             median = currentPI / r;
             document.getElementById('out2').innerText = "Das Medium ist ≈ " + median;
