@@ -101,16 +101,15 @@
             text-align: center;
             outline: none;
         }
-
-        /* Ergebnisanzeige */
-        #out {
-            margin-top: 1.5rem;
+        .out {
+                   margin-top: 1.5rem;
             font-size: 1.2rem;
             font-family: 'Courier New', Courier, monospace;
             background: rgba(255, 255, 255, 0.1);
             padding: 10px;
             border-radius: 6px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+        
         }
     </style>
 </head>
@@ -127,13 +126,13 @@
             <button onclick="runSimulation()">Starten</button>
         </div>
 
-        <p id="out">Ergebnis: -</p>
+        <p id="out" class="out">Ergebnis: -</p>
 
         <div class="controls">
             <input type="number" id="repetions" value="2" min="1">
             <button onclick="reapeat()">Schleife Starten</button>
         </div>
-                <p id="out2">Ergebnis: -</p>
+                <p id="out2" class="out">Ergebnis: -</p>
     </div>
 
     <script>
@@ -188,11 +187,10 @@
             while(r >= currentRun) {
                 runSimulation();
                 currentRun++;
-                alert('Läuft');
             }
             let median = 0;
             median = currentPI / r;
-            document.getElementById('out2').innerText = "Pi ≈ " + pi;
+            document.getElementById('out2').innerText = "Das Medium ist ≈ " + pi;
             currentPI = 0;
         }
     </script>
