@@ -130,7 +130,7 @@
         <p id="out">Ergebnis: -</p>
 
         <div class="controls">
-            <input type="number" id="repetitions" value="2" min="1">
+            <input type="number" id="repetions" value="2" min="1">
             <button onclick="reapeat()">Schleife Starten</button>
         </div>
                 <p id="out2">Ergebnis: -</p>
@@ -182,11 +182,18 @@
         }
 
         function repeatSimulation() {
-            let r = document.getElementById('repetitions').value;
-            runSimulation();
+            let currentRun = 0;
+            let r = document.getElementById('repetions').value;
+            
+            while(r >= currentRun) {
+                runSimulation();
+                currentRun++;
+                alert('Läuft');
+            }
             let median = 0;
             median = currentPI / r;
             document.getElementById('out2').innerText = "Pi ≈ " + pi;
+            currentPI = 0;
         }
     </script>
 </body>
